@@ -11,7 +11,8 @@ async fn main() {
 
     let (tera, mut context) = generate_context();
 
-    context.insert("column_vec", &x);
+    context.insert("column_vec", &x.column_vec);
+    context.insert("table_name", &x.table_name);
 
     let rendered = tera.render("sql/hello.tem", &context).unwrap();
 
