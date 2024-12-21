@@ -12,7 +12,14 @@ async fn main() {
 
     let (tera, mut context) = generate_context();
 
-    let mut entity_name = x.table_name.from_case(Case::Snake)
+    let mut entity_name = x.table_name.clone();
+    //去除表前缀
+    if entity_name.starts_with("tb_"){
+        entity_name.remove(0);
+        entity_name.remove(0);
+        entity_name.remove(0);
+    }
+    let mut entity_name = entity_name.from_case(Case::Snake)
         .without_boundaries(&[Boundary::DigitUpper, Boundary::DigitLower])
         .to_case(Case::Camel);
     entity_name.push_str("Entity");
