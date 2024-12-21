@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-sqlx = {version = "*"}
-minijinja = {version = "*"}
+sqlx = { version = "*" }
+minijinja = { version = "*" }
+tera = { version = "1" }
