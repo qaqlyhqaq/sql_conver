@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-sqlx = { version = "*" }
+tokio = { version = "*", features = ["rt", "rt-multi-thread", "macros"] }
+sqlx = { version = "*",features = ["mysql","runtime-tokio-rustls"] }
 minijinja = { version = "*" }
 tera = { version = "1" }
+serde = { version = "1.0.216", features = ["derive"] }

@@ -1,13 +1,20 @@
 mod template_generate;
+mod sql;
 
-use tera::Tera;
+use crate::sql::fetch_table_struct::fetch_table_struct;
 use crate::template_generate::generate::generate_context;
 
-fn main() {
+#[tokio::main]
+async fn main() {
 
-    let (tera,context) = generate_context();
+    let x = fetch_table_struct().await;
+
+    let (tera, mut context) = generate_context();
+
+    context.insert("column_vec", &x);
 
     let rendered = tera.render("sql/hello.tem", &context).unwrap();
 
     println!("{}", rendered);
+
 }
