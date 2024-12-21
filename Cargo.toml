@@ -9,3 +9,4 @@ sqlx = { version = "*",features = ["mysql","runtime-tokio-rustls"] }
 tera = { version = "1" }
 serde = { version = "1.0.216", features = ["derive"] }
 convert_case ={version = "*",features = ["rand"]}
+chrono = {version = "0.4",features = ["default","serde"]}

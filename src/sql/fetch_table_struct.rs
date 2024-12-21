@@ -29,7 +29,7 @@ fn mysql_type_map(mysql_type:String)->String{
         "tinyint" => "int".to_string(),
         "text" => "String".to_string(),
         "int" => "int".to_string(),
-        "datetime" => "DateTime".to_string(),
+        "datetime" => "Timestamp".to_string(),
         unMatch => {panic!("unMatch:{}",unMatch)}
     }
 }
