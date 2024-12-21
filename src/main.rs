@@ -41,7 +41,7 @@ async fn main() {
     context.insert("table_name", &x.table_name);
     context.insert("entity_name", &entity_name);
 
-    let rendered = tera.render("sql/hello.tem", &context).unwrap();
+    let rendered = tera.render("sql/java_entity.tem", &context).unwrap();
 
     println!("{}", rendered);
 
