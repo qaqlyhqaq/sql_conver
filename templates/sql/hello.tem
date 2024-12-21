@@ -1,7 +1,3 @@
-{# 这是注释 #}
-{% raw %}
-这是原生块
-{% endraw %}
-
+{# 这是注释 #}{% raw %}这是原生块{% endraw %}
 {% for product in products %}{{loop.index}}. Hello, {{product}}
 {% endfor %}
