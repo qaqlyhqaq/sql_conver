@@ -1,6 +1,7 @@
 /*
 拉取表结构
  */
+use convert_case::{Boundary, Case, Casing};
 use sqlx::{Column, Row};
 use serde::Serialize;
 
@@ -8,6 +9,7 @@ use serde::Serialize;
 #[derive(Clone,Serialize,Debug)]
 pub struct MyColumn{
     name : String,
+    raw_name : String,
     type_info : String,
     commentary:String,
 }
@@ -34,7 +36,10 @@ pub async fn fetch_table_struct() -> MyTable {
                 "无类型".to_string()
             };
             MyColumn{
-                name:row.get(3),
+                raw_name:row.get(3),
+                name:row.get::<String, usize>(3).from_case(Case::Snake)
+                    .without_boundaries(&[Boundary::DigitUpper, Boundary::DigitLower])
+                    .to_case(Case::Camel),
                 type_info:type_info ,
                 commentary:String::from_utf8(row.get::<Vec<u8>,usize>(19)).unwrap(),
             }

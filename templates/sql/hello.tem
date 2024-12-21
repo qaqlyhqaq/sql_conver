@@ -2,12 +2,12 @@
 @Data
 @Accessors(chain = true)
 @TableName("{{table_name}}")
-public class {{table_name}} implements Serializable {
+public class {{entity_name}} implements Serializable {
 {% for column in column_vec %}
 /*
 *   {{column.commentary}}
 */
-@TableField("{{column.name}}")
+@TableField("{{column.raw_name}}")
 private {{column.type_info}} {{column.name}};
 {% endfor %}
 }
