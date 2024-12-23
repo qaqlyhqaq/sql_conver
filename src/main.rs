@@ -1,5 +1,3 @@
-#![feature(path_add_extension)]
-
 mod template_generate;
 mod sql;
 use std::io::Write;
