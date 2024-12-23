@@ -1,7 +1,6 @@
 use std::fs::read;
 use std::path::PathBuf;
 use quick_xml::events::Event;
-use tera::Value::String;
 
 pub struct Pom {
     //pom.xml file path
@@ -27,7 +26,7 @@ impl Pom {
 
         let vec = read(buf).unwrap();
 
-        let pom_file_content = String::from_utf8(vec).unwrap();
+        let pom_file_content:String = String::from_utf8(vec).unwrap();
 
         let mut reader = quick_xml::Reader::from_str(pom_file_content.as_str());
         let config = reader.config_mut();
@@ -41,7 +40,8 @@ impl Pom {
 
             match event {
                 Event::Start(start_tag) => {
-                    println!("start_tag:{}",start_tag.name().0);
+                    let string = String::from_utf8(start_tag.name().0.into()).expect("TODO: panic message");
+                    println!("start_tag:{}",string);
                 }
                 Event::Eof => {
                     break;
@@ -53,4 +53,13 @@ impl Pom {
         }
 
         }
+}
+
+
+#[cfg(test)]
+mod tests{
+    #[test]
+    fn is_work(){
+
+    }
 }
