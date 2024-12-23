@@ -1,6 +1,7 @@
 use std::fs::read;
 use std::path::PathBuf;
 use quick_xml::events::Event;
+use tera::Value::String;
 
 pub struct Pom {
     //pom.xml file path
@@ -39,16 +40,15 @@ impl Pom {
             let event = reader.read_event_into(&mut buf).unwrap();
 
             match event {
-                Event::Start(_) => {}
-                Event::End(_) => {}
-                Event::Empty(_) => {}
-                Event::Text(_) => {}
-                Event::CData(_) => {}
-                Event::Comment(_) => {}
-                Event::Decl(_) => {}
-                Event::PI(_) => {}
-                Event::DocType(_) => {}
-                Event::Eof => {}
+                Event::Start(start_tag) => {
+                    println!("start_tag:{}",start_tag.name().0);
+                }
+                Event::Eof => {
+                    break;
+                }
+                _ =>{
+                    //ignore
+                }
             }
         }
 
