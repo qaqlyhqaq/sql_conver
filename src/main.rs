@@ -1,6 +1,9 @@
+#![feature(path_add_extension)]
+
 mod template_generate;
 mod sql;
-
+use std::io::Write;
+use std::path::Path;
 use convert_case::{Boundary, Case, Casing};
 use crate::sql::fetch_table_struct::fetch_table_struct;
 use crate::template_generate::generate::generate_context;
@@ -43,6 +46,29 @@ async fn main() {
 
     let rendered = tera.render("sql/java_entity.tem", &context).unwrap();
 
-    println!("{}", rendered);
+    // println!("{}", rendered);
+
+    //写入到文件
+    let java_entity_directory = std::path::Path::new("E:/project/official_website/official-bus/official-bus-cms/src/main/java/com/yymt/bus/cms/persistence/resource/entity");
+
+    if !java_entity_directory.exists()|| !java_entity_directory.is_dir() {
+        panic!("无效路径");
+    }
+
+    let entity_java_path = format!("{}.java", entity_name);
+    let mut java_entity_directory =java_entity_directory.to_path_buf();
+    java_entity_directory.push(&entity_java_path);
+    // let buf = binding.as_path();
+    let buf = java_entity_directory;
+
+    //打开文件
+    println!("binding: {:?}", &buf);
+    let mut entity_java_file = std::fs::File::options().write(true).append(false).create_new(true).create(true).open(Path::new(&buf)).unwrap();
+
+    write!(entity_java_file, "{}", rendered).unwrap();
+
+    drop(entity_java_file);
+
+    println!("写入完毕!");
 
 }
