@@ -1,5 +1,7 @@
 mod template_generate;
 mod sql;
+mod mvn;
+
 use std::io::Write;
 use std::path::Path;
 use convert_case::{Boundary, Case, Casing};
