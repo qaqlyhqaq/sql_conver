@@ -1,5 +1,6 @@
 use std::fs::read;
 use std::path::PathBuf;
+use quick_xml::events::Event;
 
 pub struct Pom {
     //pom.xml file path
@@ -27,5 +28,29 @@ impl Pom {
 
         let pom_file_content = String::from_utf8(vec).unwrap();
 
-    }
+        let mut reader = quick_xml::Reader::from_str(pom_file_content.as_str());
+        let config = reader.config_mut();
+        config.trim_text(true);
+        config.expand_empty_elements = true;
+
+        let mut buf = Vec::new();
+
+        loop {
+            let event = reader.read_event_into(&mut buf).unwrap();
+
+            match event {
+                Event::Start(_) => {}
+                Event::End(_) => {}
+                Event::Empty(_) => {}
+                Event::Text(_) => {}
+                Event::CData(_) => {}
+                Event::Comment(_) => {}
+                Event::Decl(_) => {}
+                Event::PI(_) => {}
+                Event::DocType(_) => {}
+                Event::Eof => {}
+            }
+        }
+
+        }
 }
