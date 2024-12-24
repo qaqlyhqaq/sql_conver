@@ -1,3 +1,5 @@
+#![feature(slice_as_array)]
+
 mod template_generate;
 mod sql;
 mod mvn;

@@ -16,7 +16,7 @@ impl Pom {
     pub fn form_path(path:PathBuf){
 
         assert!(path.is_dir(),"路径不为目录");
-        assert!(!path.exists(),"路径不存在");
+        assert!(path.exists(),"路径不存在");
 
         let mut buf = path.to_path_buf();
 
@@ -37,11 +37,30 @@ impl Pom {
 
         loop {
             let event = reader.read_event_into(&mut buf).unwrap();
-
             match event {
                 Event::Start(start_tag) => {
                     let string = String::from_utf8(start_tag.name().0.into()).expect("TODO: panic message");
                     println!("start_tag:{}",string);
+                }
+                Event::End(end) => {
+                    let string = String::from_utf8(end.name().0.into()).expect("TODO: panic message");
+                    println!("End:{}",string);
+                }
+                Event::Decl(decl) => {
+                    let string1 = String::from_utf8(decl.to_vec()).unwrap();
+                    println!("Decl:{}",string1);
+                }
+                Event::PI(pi) => {
+                    let string1 = String::from_utf8(pi.to_vec()).unwrap();
+                    println!("pi:{}",string1);
+                }
+                Event::DocType(docType) => {
+                    let string1 = String::from_utf8(docType.to_vec()).unwrap();
+                    println!("DocType:{}",string1);
+                }
+                Event::CData(data) => {
+                    let string1 = String::from_utf8(data.to_vec()).unwrap();
+                    println!("CDATA:{}",string1);
                 }
                 Event::Eof => {
                     break;
@@ -58,8 +77,11 @@ impl Pom {
 
 #[cfg(test)]
 mod tests{
+    use crate::mvn::root_pom_parse::Pom;
+
     #[test]
     fn is_work(){
-
+        let path1 = std::path::Path::new("E:/project/official_website/official-api/official-api-cms");
+        Pom::form_path(path1.into());
     }
 }
