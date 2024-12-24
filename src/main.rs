@@ -63,7 +63,7 @@ async fn main() {
 
     //打开文件
     println!("binding: {:?}", &buf);
-    let mut entity_java_file = std::fs::File::options().write(true).append(false).create_new(true).create(true).open(Path::new(&buf)).unwrap();
+    let mut entity_java_file = std::fs::File::options().write(true).append(false).create(true).open(Path::new(&buf)).unwrap();
 
     write!(entity_java_file, "{}", rendered).unwrap();
 

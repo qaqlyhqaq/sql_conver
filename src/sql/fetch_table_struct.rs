@@ -36,7 +36,7 @@ fn mysql_type_map(mysql_type:String)->String{
 
 
 pub async fn fetch_table_struct() -> MyTable {
-    let table_name = "tb_official_news_kind".to_string();
+    let table_name = "tb_official_news".to_string();
     let database_url = include_str!("../../assets/database_url");
     let mut pool = sqlx::MySqlPool::connect(database_url).await.unwrap();
     let mut conn = pool.acquire().await.unwrap();
