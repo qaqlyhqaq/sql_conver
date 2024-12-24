@@ -34,12 +34,7 @@ impl Pom {
         let mut buf = Vec::new();
 
         loop {
-            let vec1 = buf.clone();
-
             let event = reader.read_event_into(&mut buf).unwrap();
-
-            let string2 = String::from_utf8(vec1).expect("TODO: panic message");
-
             match event {
                 Event::Start(start_tag) => {
                     let string =
@@ -70,8 +65,9 @@ impl Pom {
                 Event::Eof => {
                     break;
                 }
-
-                Event::Empty(_) => {}
+                Event::Empty(_) => {
+                    println!("empty event");
+                }
                 Event::Text(text) => {
                     let string = String::from_utf8(text.to_vec()).expect("TODO: panic message");
                     println!("Text:{}", string);
