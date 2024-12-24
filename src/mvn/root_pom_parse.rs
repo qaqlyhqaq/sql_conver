@@ -36,31 +36,42 @@ impl Pom {
         let mut buf = Vec::new();
 
         loop {
+            let vec1 = buf.clone();
+
             let event = reader.read_event_into(&mut buf).unwrap();
+
+            let string2 = String::from_utf8(vec1).expect("TODO: panic message");
+
             match event {
                 Event::Start(start_tag) => {
                     let string = String::from_utf8(start_tag.name().0.into()).expect("TODO: panic message");
                     println!("start_tag:{}",string);
+                    println!("loop:{}",string2);
                 }
                 Event::End(end) => {
                     let string = String::from_utf8(end.name().0.into()).expect("TODO: panic message");
                     println!("End:{}",string);
+                    println!("loop:{}",string2);
                 }
                 Event::Decl(decl) => {
                     let string1 = String::from_utf8(decl.to_vec()).unwrap();
                     println!("Decl:{}",string1);
+                    println!("loop:{}",string2);
                 }
                 Event::PI(pi) => {
                     let string1 = String::from_utf8(pi.to_vec()).unwrap();
                     println!("pi:{}",string1);
+                    println!("loop:{}",string2);
                 }
                 Event::DocType(docType) => {
                     let string1 = String::from_utf8(docType.to_vec()).unwrap();
                     println!("DocType:{}",string1);
+                    println!("loop:{}",string2);
                 }
                 Event::CData(data) => {
                     let string1 = String::from_utf8(data.to_vec()).unwrap();
                     println!("CDATA:{}",string1);
+                    println!("loop:{}",string2);
                 }
                 Event::Eof => {
                     break;
