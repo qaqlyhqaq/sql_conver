@@ -70,12 +70,11 @@ impl Pom {
                         .clone()
                         .read_text(start_tag.name())
                         .unwrap();
-                    let current_path = buf.as_path().clone();
+                    let current_path = buf.as_path();
                     let current_path = current_path.parent().unwrap();
                     let current_path = current_path.join(result.clone().to_string());
                     //recurse call
                     pom.sub_module.push(Pom::form_path(current_path));
-                    println!("module:{}", result);
                 },
                 Ok(Event::Start(start_tag))
                 if start_tag.name().0.eq("artifactId".as_bytes())
