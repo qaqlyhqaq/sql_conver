@@ -99,14 +99,8 @@ impl Pom {
                         .unwrap();
                     let current_path = buf.as_path().clone();
                     let current_path = current_path.parent().unwrap();
-                    let current_pom_file = format!("{}/pom.xml", result.clone().to_string());
-                    let current_path = current_path.join(current_pom_file);
-                    pom.sub_module.push(Pom {
-                        file_path: current_path.to_str().unwrap().into(),
-                        artifact_id: result.to_string(),
-                        src_store: None,
-                        sub_module: vec![],
-                    });
+                    let current_path = current_path.join(result.clone().to_string());
+                    pom.sub_module.push(Pom::form_path(current_path));
                     println!("module:{}", result);
                 },
                 Ok(Event::Start(start_tag))
