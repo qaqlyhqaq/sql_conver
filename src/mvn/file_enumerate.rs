@@ -1,9 +1,16 @@
 use std::path::PathBuf;
-use tokio::fs::File;
 
-pub enum  DirectoryFileEnumerate {
+pub enum  FileEnumerate {
     //file relatively path Collection
-    files(Vec<PathBuf>),
+    file(File),
     //directory
-    directory(Vec<DirectoryFileEnumerate>,PathBuf),
+    directory(Directory),
+}
+
+struct Directory {
+    path: PathBuf,
+}
+
+struct File{
+    path: PathBuf,
 }
