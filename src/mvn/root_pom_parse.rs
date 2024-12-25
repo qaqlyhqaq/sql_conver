@@ -18,14 +18,17 @@ pub struct Pom {
 }
 
 
-trait Stack<T>{
+trait Stack<T>
+where
+T:Debug,
+{
     fn push(&mut self,item:T);
     fn pop(&mut self,)->T;
     fn len(&self) -> usize;
-    fn display(&self);
+    fn display(&self,f: &mut Formatter<'_>);
 }
 
-impl<T: std::fmt::Display> Stack<T> for Vec<T> {
+impl<T: std::fmt::Display + std::fmt::Debug> Stack<T> for Vec<T> {
 
     fn push(&mut self, item: T) {
         self.push(item);
@@ -39,15 +42,16 @@ impl<T: std::fmt::Display> Stack<T> for Vec<T> {
         self.len()
     }
 
-    fn display(&self){
-        self.iter().for_each(|item| println!("{}", item));
+    fn display(&self,f: &mut Formatter<'_>){
+        write!(f, "{:?}", self).unwrap();
     }
 
 }
 
-impl<T> Debug for dyn Stack<T> {
+impl<T: std::fmt::Debug> Debug for dyn Stack<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.display();
+        self.display(f);
+
         return Ok(());
     }
 }
@@ -63,7 +67,7 @@ impl Pom {
 
         assert!(buf.exists(), "路径下不存在 pom.xml 文件!");
 
-        let vec = read(buf).unwrap();
+        let vec = read(&buf).unwrap();
 
         let pom_file_content: String = String::from_utf8(vec).unwrap();
 
@@ -73,7 +77,7 @@ impl Pom {
         config.expand_empty_elements = true;
 
         let mut pom = Pom {
-            file_path: Default::default(),
+            file_path: buf.to_str().unwrap().into(),
             artifact_id: "".to_string(),
             src_store: None,
             sub_module: vec![],
@@ -86,28 +90,31 @@ impl Pom {
             let event = reader.read_event();
 
             match event.clone() {
-                Ok(Event::Start(start_tag)) =>  {
-                    let string1 = String::from_utf8(start_tag.name().0.to_vec()).unwrap();
-                    println!("push:{}", string1);
-                    stack.push(string1);
+                Ok(Event::Start(start_tag))
+                if start_tag.name().0.eq("module".as_bytes())
+                    && stack.len() == 2 => {
+                    let result = reader
+                        .clone()
+                        .read_text(start_tag.name())
+                        .unwrap();
+                    let current_path = buf.as_path().clone();
+                    let current_path = current_path.parent().unwrap();
+                    let current_pom_file = format!("{}/pom.xml", result.clone().to_string());
+                    let current_path = current_path.join(current_pom_file);
+                    pom.sub_module.push(Pom {
+                        file_path: current_path.to_str().unwrap().into(),
+                        artifact_id: result.to_string(),
+                        src_store: None,
+                        sub_module: vec![],
+                    });
+                    println!("module:{}", result);
                 },
-                _ => {
-                    //ignores !
-                }
-            }
-
-
-            
-            match event.clone() {
-                // Ok(Event::Start(start_tag))
-                //     if start_tag.name().0.eq("module".as_bytes()) =>  {
-                //     let result = reader.read_text(start_tag.name()).unwrap();
-                //     println!("text:{}", result);
-                // },
                 Ok(Event::Start(start_tag))
                 if start_tag.name().0.eq("artifactId".as_bytes())
-                && stack.len() == 2=>  {
-                    let result = reader.clone().read_text(start_tag.name()).unwrap();
+                && stack.len() == 1=>  {
+                    let result = reader
+                        .clone()
+                        .read_text(start_tag.name()).unwrap();
                     pom.artifact_id = result.to_string();
                 },
                 Ok(Event::Eof)=>break,
@@ -123,12 +130,12 @@ impl Pom {
                 Ok(Event::End(end_tag)) =>  {
                     let string1 = String::from_utf8(end_tag.name().0.to_vec()).unwrap();
                     let string2 = stack.pop();
-                    if ! string1.eq(&string2) {
-                        dbg!(&stack);
-                    }
-                    assert_eq!(string1, string2);
-                    println!("pop:{}", string1);
-                }
+                    assert_eq!(string1, string2,"不相等,stack:{:?}",stack);
+                },
+                Ok(Event::Start(start_tag)) =>  {
+                    let string1 = String::from_utf8(start_tag.name().0.to_vec()).unwrap();
+                    stack.push(string1);
+                },
                 _ => {
                     //ignores !
                 }
