@@ -1,11 +1,10 @@
+use crate::collection::stack::Stack;
+use quick_xml::events::Event;
 use std::any::Any;
-use std::fmt::{Debug, Formatter};
-use quick_xml::events::{BytesStart, Event};
+use std::fmt::Debug;
 use std::fs::read;
 use std::io::Read;
 use std::path::PathBuf;
-use quick_xml::name::QName;
-use crate::collection::stack::Stack;
 
 #[derive(Debug)]
 pub struct Pom {
