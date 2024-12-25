@@ -48,8 +48,7 @@ impl Pom {
             sub_module: vec![],
         };
 
-         let mut  vec1 = Vec::new();
-        let stack: &mut dyn Stack<std::string::String> = &mut vec1;
+        let stack: &mut dyn Stack<std::string::String> = &mut Vec::new();
 
         loop {
             let event = reader.read_event();
