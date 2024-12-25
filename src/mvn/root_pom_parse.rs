@@ -48,6 +48,16 @@ impl Pom {
             sub_module: vec![],
         };
 
+        let src_store_path = buf.parent().unwrap().to_owned();
+        let src_store_path = src_store_path.join("src/main/java");
+        pom.src_store = if src_store_path.exists()
+        && src_store_path.is_dir(){
+            Some(src_store_path)
+        }else{
+            None
+        };
+
+
         let stack: &mut dyn Stack<std::string::String> = &mut Vec::new();
 
         loop {
