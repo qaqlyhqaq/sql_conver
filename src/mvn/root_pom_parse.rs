@@ -1,10 +1,10 @@
-use std::ascii::AsciiExt;
 use quick_xml::events::Event;
 use std::fs::read;
 use std::io::Read;
 use std::path::PathBuf;
 use quick_xml::name::QName;
 
+#[derive(Debug)]
 pub struct Pom {
     //pom.xml file path
     file_path: PathBuf,
@@ -12,10 +12,11 @@ pub struct Pom {
     artifact_id: String,
     //是否具有源码文件 , 如果有,则记录路径
     src_store: Option<PathBuf>,
+    sub_module: Vec<Pom>,
 }
 
 impl Pom {
-    pub fn form_path(path: PathBuf) {
+    pub fn form_path(path: PathBuf) -> Pom{
         assert!(path.is_dir(), "路径不为目录");
         assert!(path.exists(), "路径不存在");
 
@@ -34,15 +35,24 @@ impl Pom {
         config.trim_text(true);
         config.expand_empty_elements = true;
 
-        let mut buf = Vec::new();
+        let mut pom = Pom {
+            file_path: Default::default(),
+            artifact_id: "".to_string(),
+            src_store: None,
+            sub_module: vec![],
+        };
 
         loop {
-            let event = reader.read_event_into(&mut buf);
             match reader.read_event() {
                 Ok(Event::Start(start_tag))
-                    if start_tag.name().0.trim_ascii_start().eq("module".as_bytes()) =>  {
+                    if start_tag.name().0.eq("module".as_bytes()) =>  {
                     let result = reader.read_text(start_tag.name()).unwrap();
                     println!("text:{}", result);
+                },
+                Ok(Event::Start(start_tag))
+                if start_tag.name().0.eq("project".as_bytes()) =>  {
+                    let result = reader.read_text(start_tag.name()).unwrap();
+                    pom.artifact_id = result.to_string();
                 },
                 Ok(Event::Eof)=>break,
                 Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
@@ -52,6 +62,8 @@ impl Pom {
                 }
             }
         }
+
+        pom
     }
 }
 
@@ -63,7 +75,9 @@ mod tests {
     fn is_work() {
         let path1 =
             // std::path::Path::new("E:/project/official_website/official-api/official-api-cms");
-            std::path::Path::new("E:/project/official_website/official-bus");
-        Pom::form_path(path1.into());
+            // std::path::Path::new("E:/project/official_website/official-bus");
+            std::path::Path::new("E:/project/official_website");
+        let pom =Pom::form_path(path1.into());
+        dbg!(pom);
     }
 }
