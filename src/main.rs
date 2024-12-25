@@ -1,4 +1,6 @@
 #![feature(slice_as_array)]
+#![feature(let_chains)]
+#![feature(if_let_guard)]
 
 mod template_generate;
 mod sql;
