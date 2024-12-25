@@ -5,6 +5,7 @@ use std::fs::read;
 use std::io::Read;
 use std::path::PathBuf;
 use quick_xml::name::QName;
+use crate::collection::stack::Stack;
 
 #[derive(Debug)]
 pub struct Pom {
@@ -18,43 +19,7 @@ pub struct Pom {
 }
 
 
-trait Stack<T>
-where
-T:Debug,
-{
-    fn push(&mut self,item:T);
-    fn pop(&mut self,)->T;
-    fn len(&self) -> usize;
-    fn display(&self,f: &mut Formatter<'_>);
-}
 
-impl<T: std::fmt::Display + std::fmt::Debug> Stack<T> for Vec<T> {
-
-    fn push(&mut self, item: T) {
-        self.push(item);
-    }
-
-    fn pop(&mut self) -> T {
-        self.pop().unwrap()
-    }
-
-    fn len(&self) -> usize{
-        self.len()
-    }
-
-    fn display(&self,f: &mut Formatter<'_>){
-        write!(f, "{:?}", self).unwrap();
-    }
-
-}
-
-impl<T: std::fmt::Debug> Debug for dyn Stack<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.display(f);
-
-        return Ok(());
-    }
-}
 
 impl Pom {
     pub fn form_path(path: PathBuf) -> Pom{
@@ -100,6 +65,7 @@ impl Pom {
                     let current_path = buf.as_path().clone();
                     let current_path = current_path.parent().unwrap();
                     let current_path = current_path.join(result.clone().to_string());
+                    //recurse call
                     pom.sub_module.push(Pom::form_path(current_path));
                     println!("module:{}", result);
                 },
