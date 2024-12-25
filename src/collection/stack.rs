@@ -37,3 +37,4 @@ impl<T: std::fmt::Debug> Debug for dyn Stack<T> {
         return Ok(());
     }
 }
+
