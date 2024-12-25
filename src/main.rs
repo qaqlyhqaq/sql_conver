@@ -6,6 +6,7 @@ mod template_generate;
 mod sql;
 mod mvn;
 mod collection;
+mod File;
 
 use std::io::Write;
 use std::path::Path;
