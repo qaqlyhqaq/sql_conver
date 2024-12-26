@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-pub enum  FileEnumerate {
+pub enum FileEnumerate {
     //file relatively path Collection
     file(File),
     //directory
@@ -9,8 +9,10 @@ pub enum  FileEnumerate {
 
 struct Directory {
     path: PathBuf,
+    //directory file
+    current_path_files: Vec<File>,
 }
 
-struct File{
+struct File {
     path: PathBuf,
 }
