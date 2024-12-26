@@ -16,3 +16,13 @@ struct Directory {
 struct File {
     path: PathBuf,
 }
+
+impl FileEnumerate {
+    pub fn form_path(path: &PathBuf) -> FileEnumerate {
+        let directory1 = Directory {
+            path:Default::default(),
+            current_path_files: vec![],
+        };
+        FileEnumerate::directory(directory1)
+    }
+}
