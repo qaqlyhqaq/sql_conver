@@ -26,3 +26,16 @@ impl FileEnumerate {
         FileEnumerate::directory(directory1)
     }
 }
+
+
+
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
+    use crate::mvn::file_enumerate::FileEnumerate;
+
+    #[test]
+    fn it_works() {
+        FileEnumerate::form_path(&PathBuf::from("E:/rust/sql_conver/src"));
+    }
+}
