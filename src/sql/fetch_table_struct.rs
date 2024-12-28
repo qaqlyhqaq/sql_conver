@@ -15,6 +15,12 @@ pub struct MyColumn{
     commentary:String,
 }
 
+impl MyColumn{
+    pub fn showName(&self)->String{
+        return self.name.clone();
+    }
+}
+
 
 #[derive(Clone,Serialize,Debug)]
 pub struct MyTable{
