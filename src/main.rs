@@ -23,7 +23,7 @@ fn capitalize_first_letter(s: &str) -> String {
 #[tokio::main]
 async fn main() {
     
-    let table_name = "tb_official_resource_store".to_string();
+    let table_name = "tb_official_product_kind".to_string();
     
     let x = fetch_table_struct(table_name).await;
 

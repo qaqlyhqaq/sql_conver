@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 
 
 /**
@@ -22,7 +23,8 @@ public class {{entity_name}} implements Serializable {
 {% for column in column_vec %}
         /*
         *   {{column.commentary}}
-        */
+        */ {% if column.raw_name == 'deleted' %}
+        @TableLogic{% endif %}
         @TableField("{{column.raw_name}}")
         private {{column.type_java}} {{column.name}};
         {% endfor %}
