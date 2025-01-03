@@ -50,9 +50,6 @@ pub async fn fetch_table_struct(table_name:String) -> MyTable {
     let statements = format!("SELECT * FROM information_schema.columns WHERE TABLE_SCHEMA = 'official_dev' AND TABLE_NAME = '{}';", table_name);
     let mut rows = sqlx::query(statements.as_str())
         .map(|row: sqlx::mysql::MySqlRow| {
-            // row.get(16);
-            // let column_key_value = String::from_utf8(row.get::<Vec<u8>, usize>(16)).unwrap();
-            // println!("column_key_value:{}", column_key_value);
             MyColumn{
                 raw_name:row.get(3),
                 name:row.get::<String, usize>(3).from_case(Case::Snake)
