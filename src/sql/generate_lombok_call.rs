@@ -47,7 +47,7 @@ mod tests {
     //根据表格 生成方法 测试样例
     #[tokio::test]
     async fn generate_lombok_call(){
-        let table_name = "tb_official_resource_store".to_string();
+        let table_name = "tb_official_product_kind".to_string();
         generate_lombok_get_accessors(table_name.clone()).await;
     }
 

@@ -13,6 +13,7 @@ pub struct MyColumn{
     type_info : String,
     type_java : String,
     commentary:String,
+    column_key_value:String,
 }
 
 impl MyColumn{
@@ -49,6 +50,9 @@ pub async fn fetch_table_struct(table_name:String) -> MyTable {
     let statements = format!("SELECT * FROM information_schema.columns WHERE TABLE_SCHEMA = 'official_dev' AND TABLE_NAME = '{}';", table_name);
     let mut rows = sqlx::query(statements.as_str())
         .map(|row: sqlx::mysql::MySqlRow| {
+            // row.get(16);
+            // let column_key_value = String::from_utf8(row.get::<Vec<u8>, usize>(16)).unwrap();
+            // println!("column_key_value:{}", column_key_value);
             MyColumn{
                 raw_name:row.get(3),
                 name:row.get::<String, usize>(3).from_case(Case::Snake)
@@ -57,6 +61,7 @@ pub async fn fetch_table_struct(table_name:String) -> MyTable {
                 type_info:String::from_utf8(row.try_get::<Vec<u8>, usize>(7).unwrap()).unwrap() ,
                 type_java:mysql_type_map(String::from_utf8(row.try_get::<Vec<u8>, usize>(7).unwrap()).unwrap()) ,
                 commentary:String::from_utf8(row.get::<Vec<u8>,usize>(19)).unwrap(),
+                column_key_value:String::from_utf8(row.get::<Vec<u8>, usize>(16)).unwrap(),
             }
         })
         .fetch_all(&mut *conn)
@@ -68,4 +73,14 @@ pub async fn fetch_table_struct(table_name:String) -> MyTable {
         column_vec: rows,
     }
 
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn test_fetch_table_struct(){
+        fetch_table_struct(String::from("tb_zhhm_information_slip")).await;
+    }
 }

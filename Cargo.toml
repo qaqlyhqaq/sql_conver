@@ -12,6 +12,7 @@ convert_case = { version = "*", features = ["rand"] }
 chrono = { version = "0.4", features = ["default", "serde"] }
 quick-xml = { version = "0.37", features = ["tokio", "encoding_rs"] }
 inflections = { version = "1" }
+rinja = { version = "0.3" }
 
 # print file tree crate ignore
 #termtree  = { version = "0.5" }
