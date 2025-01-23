@@ -169,4 +169,18 @@ mod tests {
         let pom =Pom::form_path(path1.into());
         dbg!(pom);
     }
+
+
+    #[ignore]
+    #[test]
+    fn test_clear() {
+        let file_path = "runtime_temporary_dir/";
+        //更换系统路径
+        let binding = file_path.to_string().replace("/",std::path::MAIN_SEPARATOR_STR);
+        let path1 =
+            std::path::Path::new(binding.as_str());
+
+        fs::remove_dir_all(path1).unwrap();
+        fs::create_dir_all(path1).unwrap();
+    }
 }
