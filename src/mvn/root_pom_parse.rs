@@ -28,6 +28,9 @@ impl Default for Pom {
             sub_module: vec![],
         }
     }
+
+
+
 }
 
 
@@ -123,6 +126,36 @@ impl Pom {
 
         pom
     }
+
+
+    fn find_artifact_id_by_path(&self,absolute_path:String)->Option<String>{
+        if let Some(src_store) = self.src_store.clone(){
+            let artifact_src_path = src_store.to_str()?.to_string();
+            if absolute_path.starts_with(artifact_src_path.as_str()) {
+                return Some(self.artifact_id.clone());
+            }
+        }
+
+        let option = self.sub_module.iter()
+            .try_find(|this_node| {
+                if let Some(src_store) = this_node.src_store.clone() {
+                    let artifact_src_path = src_store.to_str().to_string();
+
+                    if absolute_path.starts_with(artifact_src_path.as_str()) {
+                        return Some(this_node.artifact_id.clone());
+                    }
+                }
+                return None;
+            });
+        if let Some(artifact_id_) = option
+        && let Some(artifact_id) = artifact_id_{
+            return Some(artifact_id.artifact_id.clone());
+        }
+
+        return None;
+    }
+
+
 }
 
 #[cfg(test)]
@@ -161,13 +194,20 @@ mod tests {
     #[ignore]
     #[test]
     fn test_form_json_file() {
-        let file_path = format!("runtime_temporary_dir/{}", "");
+        let file_path = format!("runtime_temporary_dir/{}", "nlOsPJA.json");
         //更换系统路径
         let binding = file_path.to_string().replace("/",std::path::MAIN_SEPARATOR_STR);
         let path1 =
             std::path::Path::new(binding.as_str());
-        let pom =Pom::form_path(path1.into());
+        let pom:Pom =serde_json::from_reader(fs::File::open(path1).unwrap()).unwrap();
         dbg!(pom);
+
+        let java_source_path =
+        r#"E:\project\official_website\official-bus\official-bus-cms\src\main\java\com\yymt\bus\cms\business\product\domain"#;
+
+
+        if java_source_path.starts_with()
+
     }
 
 
