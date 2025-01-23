@@ -194,8 +194,6 @@ mod tests {
         let path1 =
             std::path::Path::new(binding.as_str());
         let pom:Pom =serde_json::from_reader(fs::File::open(path1).unwrap()).unwrap();
-        dbg!(&pom);
-
         let java_source_path =
         r#"E:\project\official_website\official-bus\official-bus-cms\src\main\java\com\yymt\bus\cms\business\product\domain"#;
 
