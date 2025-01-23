@@ -48,7 +48,8 @@ impl Pom {
         };
 
         let src_store_path = buf.parent().unwrap().to_owned();
-        let src_store_path = src_store_path.join("src/main/java");
+        let relatively_file_path = format!("src{0}main{0}java",std::path::MAIN_SEPARATOR_STR);
+        let src_store_path = src_store_path.join(relatively_file_path);
         pom.src_store = if src_store_path.exists()
         && src_store_path.is_dir(){
             Some(src_store_path)
@@ -119,10 +120,14 @@ mod tests {
 
     #[test]
     fn is_work() {
+
+
+
+        let binding = "E:/project/official_website".to_string().replace("/",std::path::MAIN_SEPARATOR_STR);
         let path1 =
             // std::path::Path::new("E:/project/official_website/official-api/official-api-cms");
             // std::path::Path::new("E:/project/official_website/official-bus");
-            std::path::Path::new("E:/project/official_website");
+            std::path::Path::new(binding.as_str());
         let pom =Pom::form_path(path1.into());
         dbg!(pom);
     }
