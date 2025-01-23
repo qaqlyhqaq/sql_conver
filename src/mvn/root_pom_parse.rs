@@ -128,7 +128,7 @@ impl Pom {
     }
 
 
-    fn find_artifact_id_by_path(&self,absolute_path:String)->Option<String>{
+    pub fn find_artifact_id_by_path(&self,absolute_path:String)->Option<String>{
         if let Some(src_store) = self.src_store.clone(){
             let artifact_src_path = src_store.to_str()?.to_string();
             if absolute_path.starts_with(artifact_src_path.as_str()) {
@@ -136,13 +136,14 @@ impl Pom {
             }
         }
 
-        let option = self.sub_module.iter()
-            .try_find(|this_node| {
-                this_node.find_artifact_id_by_path(absolute_path)
+        let option = self.sub_module
+            .iter()
+            .find_map(|x| {
+                x.find_artifact_id_by_path(absolute_path.clone())
             });
-        if let Some(artifact_id_) = option
-        && let Some(artifact_id) = artifact_id_{
-            return Some(artifact_id.artifact_id.clone());
+        if let Some(artifact_id) = option
+        {
+            return Some(artifact_id.clone());
         }
 
         return None;
@@ -193,13 +194,16 @@ mod tests {
         let path1 =
             std::path::Path::new(binding.as_str());
         let pom:Pom =serde_json::from_reader(fs::File::open(path1).unwrap()).unwrap();
-        dbg!(pom);
+        dbg!(&pom);
 
         let java_source_path =
         r#"E:\project\official_website\official-bus\official-bus-cms\src\main\java\com\yymt\bus\cms\business\product\domain"#;
 
+        let java_source_path = java_source_path.to_string();
 
-        // if java_source_path.starts_with()
+        let option = pom.find_artifact_id_by_path(java_source_path);
+
+        dbg!(option);
 
     }
 
