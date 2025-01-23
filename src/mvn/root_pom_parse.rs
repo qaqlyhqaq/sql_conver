@@ -138,14 +138,7 @@ impl Pom {
 
         let option = self.sub_module.iter()
             .try_find(|this_node| {
-                if let Some(src_store) = this_node.src_store.clone() {
-                    let artifact_src_path = src_store.to_str().to_string();
-
-                    if absolute_path.starts_with(artifact_src_path.as_str()) {
-                        return Some(this_node.artifact_id.clone());
-                    }
-                }
-                return None;
+                this_node.find_artifact_id_by_path(absolute_path)
             });
         if let Some(artifact_id_) = option
         && let Some(artifact_id) = artifact_id_{
@@ -206,7 +199,7 @@ mod tests {
         r#"E:\project\official_website\official-bus\official-bus-cms\src\main\java\com\yymt\bus\cms\business\product\domain"#;
 
 
-        if java_source_path.starts_with()
+        // if java_source_path.starts_with()
 
     }
 
