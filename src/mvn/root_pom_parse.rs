@@ -149,14 +149,13 @@ mod tests {
         file_name.push_str(".json");
         let file_path = format!("runtime_temporary_dir/{}", file_name);
         let file_buf = file_path.parse::<PathBuf>().unwrap();
-        let mut file = fs::File::options()
+        let  file = fs::File::options()
             .create_new(true)
             .write(true)
-            .open(file_buf)
+            .open(file_buf.clone())
             .unwrap();
-        // write!(file, "{}", serialized);
-        serde_json::to_writer_pretty(file, &pom);
-        dbg!(pom);
+        let _ = serde_json::to_writer_pretty(file, &pom);
+        println!("{}",file_buf.display().to_string());
     }
 
     #[ignore]
