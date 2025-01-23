@@ -126,6 +126,7 @@ impl Pom {
 
 
     pub fn find_artifact_id_by_path(&self,absolute_path:String)->Option<String>{
+        
         if let Some(src_store) = self.src_store.clone(){
             let artifact_src_path = src_store.to_str()?.to_string();
             if absolute_path.starts_with(artifact_src_path.as_str()) {
@@ -143,7 +144,7 @@ impl Pom {
             return Some(artifact_id.clone());
         }
 
-        return None;
+        None
     }
 
 
