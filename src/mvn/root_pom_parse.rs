@@ -14,6 +14,7 @@ pub struct Pom {
     artifact_id: String,
     //是否具有源码文件 , 如果有,则记录路径
     src_store: Option<PathBuf>,
+    //子模块路径
     sub_module: Vec<Pom>,
 }
 
