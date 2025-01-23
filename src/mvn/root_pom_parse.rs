@@ -5,8 +5,9 @@ use std::fmt::Debug;
 use std::fs::read;
 use std::io::Read;
 use std::path::PathBuf;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug,Deserialize,Serialize)]
 pub struct Pom {
     //pom.xml file path
     file_path: PathBuf,
@@ -77,13 +78,13 @@ impl Pom {
                 Ok(Event::Start(start_tag))
                 if start_tag.name().0.eq("module".as_bytes())
                     && stack.len() == 2 => {
-                    let result = reader
+                    let sub_module_name = reader
                         .clone()
                         .read_text(start_tag.name())
                         .unwrap();
                     let current_path = buf.as_path();
                     let current_path = current_path.parent().unwrap();
-                    let current_path = current_path.join(result.clone().to_string());
+                    let current_path = current_path.join(sub_module_name.clone().to_string());
                     //recurse call
                     pom.sub_module.push(Pom::form_path(current_path));
                 },
@@ -126,17 +127,45 @@ impl Pom {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+    use std::path::PathBuf;
+    use rand::{Rng};
+    use rand::distr::Alphanumeric;
+    use std::io::Write;
     use crate::mvn::root_pom_parse::Pom;
 
     #[test]
     fn is_work() {
-
-
-
         let binding = "E:/project/official_website".to_string().replace("/",std::path::MAIN_SEPARATOR_STR);
         let path1 =
-            // std::path::Path::new("E:/project/official_website/official-api/official-api-cms");
-            // std::path::Path::new("E:/project/official_website/official-bus");
+            std::path::Path::new(binding.as_str());
+        let pom =Pom::form_path(path1.into());
+
+        let mut file_name: String = rand::thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(7)
+            .map(char::from)
+            .collect();
+        file_name.push_str(".json");
+        let file_path = format!("runtime_temporary_dir/{}", file_name);
+        let file_buf = file_path.parse::<PathBuf>().unwrap();
+        let mut file = fs::File::options()
+            .create_new(true)
+            .write(true)
+            .open(file_buf)
+            .unwrap();
+        // write!(file, "{}", serialized);
+        serde_json::to_writer_pretty(file, &pom);
+        dbg!(pom);
+    }
+
+    #[ignore]
+    #[test]
+    fn test_form_json_file() {
+        let file_path = format!("runtime_temporary_dir/{}", "");
+        //更换系统路径
+        let binding = file_path.to_string().replace("/",std::path::MAIN_SEPARATOR_STR);
+        let path1 =
             std::path::Path::new(binding.as_str());
         let pom =Pom::form_path(path1.into());
         dbg!(pom);
