@@ -18,6 +18,17 @@ pub struct Pom {
     sub_module: Vec<Pom>,
 }
 
+impl Default for Pom {
+    fn default() -> Self {
+        Pom {
+            file_path: PathBuf::default(),
+            artifact_id: "".to_string(),
+            src_store: None,
+            sub_module: vec![],
+        }
+    }
+}
+
 
 
 
@@ -43,9 +54,7 @@ impl Pom {
 
         let mut pom = Pom {
             file_path: buf.to_str().unwrap().into(),
-            artifact_id: "".to_string(),
-            src_store: None,
-            sub_module: vec![],
+            ..Default::default()
         };
 
         let src_store_path = buf.parent().unwrap().to_owned();
